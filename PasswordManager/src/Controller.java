@@ -2,7 +2,7 @@ import java.util.Scanner;
 
 /**
  * Controller class for the train simulation system.
- * It handles user input and manages the train and station operations.
+ * It handles user input and manages credentials and password management operations
  * 
  * @author Kyle Robert Harrison
  * @version 1.0, 11 Apr 2025

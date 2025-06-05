@@ -11,6 +11,14 @@ import java.util.LinkedList;
 public class LinkedBinarySearchTree<K extends Comparable<K>, V> implements BinarySearchTreeADT<K, V> {
 
     /**
+     * Local Variables for overall tree structure
+     *  root declares the root of the tree
+     *  parent - is a tempary node for 
+     */
+    private BinaryNode root;
+    private BinaryNode parent;
+    private int size;
+    /**
      * A node in a binary tree.
      * Each node contains a key-value pair and references to its left and right children.
      */
@@ -48,11 +56,41 @@ public class LinkedBinarySearchTree<K extends Comparable<K>, V> implements Binar
      * The tree is initially empty, with no nodes.
      */
     public LinkedBinarySearchTree() {
-        
+        size = 0;
     }
 
+    /**
+     * Initial 
+     */
     @Override
     public void insert(K key, V value) {
+        
+
+
+        // if empty insert at the root
+        if (size() == 0) {
+            root = new BinaryNode(new KeyValueEntry<K,V>(key, value));
+            return;
+        }
+        else {
+            insert(key, value, root);
+        }
+        // otherwise find where to insert
+    }
+
+    // private method for recursive calls
+    private void insert(K key, V value, BinaryNode p) {
+        // base case
+        if (p.element.compareTo(new KeyValueEntry<K,V>(key, value)) == null) {
+
+        }
+        // recursive call - determine if the 
+        if (root.element.compareTo(new KeyValueEntry<K,V>(key, value)) <= 0) { // compare to returns a nu
+            insert(key, value, p.left);
+        }
+        else if (root.element.compareTo(new KeyValueEntry<K,V>(key, value)) > 0) {
+            insert(key, value, p.right);
+        }
         
     }
 
@@ -77,6 +115,10 @@ public class LinkedBinarySearchTree<K extends Comparable<K>, V> implements Binar
         return null;
     }
 
+    // While also likely need an additional helper method to find the successor to an
+    public BinaryNode findLeftMost() {
+        return null;
+    }
     @Override
     public V findMax() {
         return null;
