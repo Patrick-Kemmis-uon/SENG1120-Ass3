@@ -36,9 +36,13 @@ public class PasswordStrengthChecker {
      * "Very Weak", "Weak", "Moderate", "Strong", "Very Strong"
      */
     public static String evaluate(String password) {
-        int[] criteriaSatisfaction = new int[5]; // criteriaSatisfaction as an array where each index represents one of the criteria
+        // criteriaSatisfaction as an array where each index represents one of the criteria
+        int[] criteriaSatisfaction = new int[5]; 
         int length = password.length();
-        if (length >= 8) { criteriaSatisfaction[0] =1;} // check if the length criteria has been met, if so increment criteriaSatisfaction
+
+        // check if the length criteria has been met, if so increment criteriaSatisfaction
+        if (length >= 8) { criteriaSatisfaction[0] =1;} 
+        
         // loop through the password to check the strength
         for (int i = 0; i < length; i++) { /* CHECK for off by 1 ERROR */
             char currChar = password.charAt(i); 
@@ -55,6 +59,7 @@ public class PasswordStrengthChecker {
                 criteriaSatisfaction[4] ++;
             }
         } // for
+        
         // count the strength
         int strength = 0;
         // Loop through each of the criteria to see if they have been satisfied
@@ -63,6 +68,7 @@ public class PasswordStrengthChecker {
                 strength ++; // increment the strength
             }
         }
+        
         // check which strength level the strength corresponds to & return it
         return strengthLevel(strength);
     }

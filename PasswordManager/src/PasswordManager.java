@@ -29,15 +29,22 @@ public class PasswordManager {
      * 
      * @return true if the credential was added successfully, false if the site already exists or otherwise fails to insert
      */
+    
+    @SuppressWarnings("unchecked") // Gets rid of yellow underlines due to some type safety warnings
     public boolean addCredential(String site, String username, String password) {
+        Credential newCredential = new Credential(site, username, password);
+        // determine the comparable key based on the site
+        String comparableKey = String.valueOf(site.hashCode());
         try {
-            
+            // Insert the data into the BST & hashtable
+            binarySearchTree.insert(comparableKey, newCredential);
+            hashTable.insert(comparableKey, newCredential);
         }
-        catch (Exception e) {
-
+        catch (Exception e) { // exceptions caught related to a credential alreay existing
+            return false; // failure to excute insertion on either BST or hashtable
         }
-        
-        return false;
+        // if neither method throws an error than the data has been succesfully inserted
+        return true;
     }
 
     /**
@@ -51,6 +58,7 @@ public class PasswordManager {
      * @return true if the credential was updated successfully, false if the site does not exist
      */
     public boolean updateCredential(String site, String newUsername, String newPassword) {
+        String comparableKey = String.valueOf(site.hashCode());
         return false;
     }
 
