@@ -8,7 +8,9 @@
  */
 public class Credential {
 
-
+    private String site;
+    private String username;
+    private String password;
     /**
      * Constructs a new Credential with the given site, username, and password.
      * 
@@ -17,7 +19,9 @@ public class Credential {
      * @param password the password for the site
      */
     public Credential(String site, String username, String password) {
-
+        this.site = site;
+        this.username = username;
+        this.password = password;
     }
 
     /**
@@ -25,7 +29,7 @@ public class Credential {
      * @return the site name
      */
     public String getSite() { 
-        return null;
+        return site;
     }
 
     /**
@@ -33,23 +37,23 @@ public class Credential {
      * @return the username
      */
     public String getUsername() { 
-        return null;
+        return username;
     }
 
     /**
-     * Returns the password of the credential.
+     * Returns the password of the credential. 
      * @return the password
      */
     public String getPassword() { 
-        return null;
+        return password;
     }
 
     /**
-     * Sets the username of the credential.
+     * Update the username of the credential.
      * @param username the new username
      */
     public void setUsername(String username) { 
-
+        this.username = username;
     }
 
     /**
@@ -57,7 +61,7 @@ public class Credential {
      * @param password the new password
      */
     public void setPassword(String password) { 
-       
+       this.password = password;
     }
 
     /**
@@ -71,6 +75,6 @@ public class Credential {
      */
     @Override
     public String toString() {
-        return null;
+        return site+" Username: "+username+", Password: "+password;
     }
 }

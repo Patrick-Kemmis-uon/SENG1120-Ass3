@@ -24,7 +24,7 @@ public class ChainingHashTable<K extends Comparable<K>,V> implements HashTableAD
     }
 
     public ChainingHashTable(int numCells){
-        V[] associativeArray = new V[numCells];
+        //V[] associativeArray = new V[numCells];
     }
 
     @Override
