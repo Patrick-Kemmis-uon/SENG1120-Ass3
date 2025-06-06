@@ -98,10 +98,7 @@ public class LinkedBinarySearchTree<K extends Comparable<K>, V> implements Binar
     }
 
 
-    @Override
-    public void remove(K key) {
-        
-    }
+    
 
     @Override
     public boolean contains(K key) {
@@ -135,15 +132,137 @@ public class LinkedBinarySearchTree<K extends Comparable<K>, V> implements Binar
         }
         throw new NoSuchElementException("The element was not in the BST | or some other weird error has occured"); // need to double check what exception type would be appropriate
     }
+    // same functionality as normal except that the return type == BinaryNode, thus acting as a helper method for remove
+    public BinaryNode findForRemove(K key) {
+        // check if the key matches the root -ie the base case
+        if  (root.element.compareTo(new KeyValueEntry<K,V>(key, null))== 0) {
+            // if so return the element as found
+            return root;// Without getValue this will return a KeyValueEntry
+        }
+        // otherwise search the rest of the BST through a recursive function
+        return findForRemove(key, root);
+    }
+
+    private BinaryNode findForRemove(K key, BinaryNode p) {
+        // Base Case  - the key of either of the children == p.key
+        if (p.element.compareTo(new KeyValueEntry<K,V>(key, null)) == 0) {
+            return p; // return the value of the child that matches the key
+        }
+        
+        // otherwise check which side of the tree that the element is
+        // recursive call - if the e > p; place it in the right subtree, if e <= ; place it in the left subtree
+        if (p.element.compareTo(new KeyValueEntry<K,V>(key, null)) <= 0) { // compare to returns a nu
+            return findForRemove(key, p.left);
+        }
+        else if (p.element.compareTo(new KeyValueEntry<K,V>(key, null)) > 0) {
+            return findForRemove(key, p.right);
+        }
+        throw new NoSuchElementException("The element was not in the BST | or some other weird error has occured"); // need to double check what exception type would be appropriate
+    }
+    /**
+     * This function has 3 cases:
+     *  1st Case:
+     *      o
+     *     / \
+     *    x   x
+     *  remove
+     * ----------
+     * 2nd Case
+     *      o
+     *     / \
+     *    o   x
+     *  remove left node & link p-left right subtree rightmost
+     * ----------
+     * 3rd case
+     *      o
+     *     / \
+     *   o|x  o
+     *         \
+     *       possible further subtree
+     *  therefor find the leftmost node in the right subtree continually
+     * 
+     * Passes the key for the item to be removed
+     */
+    @Override
+    public void remove(K key) {
+        // Temporary node for 
+        BinaryNode found;
+        // start at the root & search for the element
+        if (root.element.compareTo(new KeyValueEntry<K,V>(key, null)) == 0) {
+            // then the node found is the root
+            found = root;
+        }
+    
+        // if it is not the root : search the rest of the tree
+        // encapsulate in a try catch
+        found = findForRemove(key);
+        // check if found == null
+        // check for base case where no children
+        // Once the element has been found - find the successor such that the tree does not become disconnected
+        BinaryNode replacementNode;
+        replacementNode = findLeftMost(found);
+
+        found = replacementNode;
+    }
+
+    // recursive remove to keep in mind pointers -- remove in the right direction
+    private BinaryNode remove(K key, BinaryNode p) { 
+        // Base Case - if it is == then remove
+        
+        // find the element
+        if (p.element.compareTo(new KeyValueEntry<K,V>(key, null)) <= 0) { // if the e <= p
+            
+            return p.left = remove(key, p.left); //return the left subtree & update the left pointer so that the tree does not become disconnected
+        }
+        else if (p.element.compareTo(new KeyValueEntry<K,V>(key, null)) <= 0) { // if the e > p
+            return p.right = remove(key, p.right); // return the right subtree & update the right pointer so that the tree does not become disconnected
+        }
+
+        // ElementNotFoundException - there is no further nodes
+        if (p.left == null && p.right == null) {
+            throw new NoSuchElementException("No Such elemeent within the Binary Search Tree");
+        }
+        p.right = remove(key, p.right);
+        return null;
+    }
+
+    // note that because this funciton only returns a V it can not be effectively used for the remove funcitonality
     @Override
     public V findMin() {
         return null;
     }
 
-    // While also likely need an additional helper method to find the successor to an
-    public BinaryNode findLeftMost() {
-        return null;
+
+    // recursive function -- THIS FUNCTION COULD result in a stackOverflow because of an infiinite loop
+    private BinaryNode findLeftMost(BinaryNode p) {
+        // Base Case - p.left && p.right == null
+        if (p.left == null && p.right == null) {
+            BinaryNode temp = p;
+            p = null; // remove the node
+            return temp;
+        }
+        // Check if p.left == null && if p.right 
+        else if (p.right != null) {
+            return findLeftMost(p.right);
+        }
+        // otherwise find the leftmost node
+        
+        // Initialise a tempary node used to find the leftmost node
+        BinaryNode current = p.left;
+        // loop through all
+        do {
+            current = current.left;
+        }
+        while (current.left != null); // only leave the loop once the leftmost node == null -->
+        //     L--> note that current will be the parent of left which == null so current will therefor be the leftmost assuming no right subtree
+        // check for a right subtree
+        if (current.right != null) {
+            return findLeftMost(p.right); // if there is a right subtree call function recursively so as not to disconnect the subtree
+        }
+        // Additional BaseCase if there is not a right subtree return current
+        return current;
     }
+    // if it is the 2nd case & null left will likely need to find the predessor
     @Override
     public V findMax() {
         return null;
