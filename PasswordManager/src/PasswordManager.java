@@ -14,6 +14,9 @@
  */
 public class PasswordManager {
 
+    private ChainingHashTable hashTable;
+    private LinkedBinarySearchTree binarySearchTree;
+
     /**
      * Adds a new credential to the password manager. 
      * The credential consists of a site, username, and password.
@@ -27,6 +30,13 @@ public class PasswordManager {
      * @return true if the credential was added successfully, false if the site already exists or otherwise fails to insert
      */
     public boolean addCredential(String site, String username, String password) {
+        try {
+            
+        }
+        catch (Exception e) {
+
+        }
+        
         return false;
     }
 

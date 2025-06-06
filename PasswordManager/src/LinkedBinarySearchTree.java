@@ -64,36 +64,39 @@ public class LinkedBinarySearchTree<K extends Comparable<K>, V> implements Binar
      */
     @Override
     public void insert(K key, V value) {
-        
-
-
         // if empty insert at the root
         if (size() == 0) {
             root = new BinaryNode(new KeyValueEntry<K,V>(key, value));
             return;
         }
+        // otherwise find where to insert
         else {
             insert(key, value, root);
         }
-        // otherwise find where to insert
+        
     }
 
     // private method for recursive calls
     private void insert(K key, V value, BinaryNode p) {
-        // base case - if either of the children don't exist; can be inserted their
-        if (p.left == null) { // this method detection might be faulty
-            p.left = new BinaryNode(new KeyValueEntry<K,V>(key, value));
-        }  
-        else if (p.right == null) {
-            p.right = new BinaryNode(new KeyValueEntry<K,V>(key, value));
-        }
+        // base case - if either of the children don't exist; the node can be inserted in the 
+        if (p.left == null || p.right == null) {
+            if (p.left == null) { // this method detection might be faulty
+                p.left = new BinaryNode(new KeyValueEntry<K,V>(key, value));
+            }  
+            else if (p.right == null) {
+                p.right = new BinaryNode(new KeyValueEntry<K,V>(key, value));
+            } // if - specific child
+        } // if - either child
+
         // recursive call - if the e > p; place it in the right subtree, if e <= ; place it in the left subtree
-        if (p.element.compareTo(new KeyValueEntry<K,V>(key, value)) <= 0) { // compare to returns a nu
-            insert(key, value, p.left);
+        if (p.element.compareTo(new KeyValueEntry<K,V>(key, value)) <= 0) { // compareTo returns a negative integer, zero or a postive integer, as e.key is <, ==, > p.key
+            insert(key, value, p.left); // if e <= p, place in the left subtree
         }
         else if (p.element.compareTo(new KeyValueEntry<K,V>(key, value)) > 0) {
-            insert(key, value, p.right);
+            insert(key, value, p.right); // if e > p, place in the right subtree
         }
+
+        
         
     }
 
