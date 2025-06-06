@@ -80,15 +80,18 @@ public class LinkedBinarySearchTree<K extends Comparable<K>, V> implements Binar
 
     // private method for recursive calls
     private void insert(K key, V value, BinaryNode p) {
-        // base case
-        if (p.element.compareTo(new KeyValueEntry<K,V>(key, value)) == null) {
-
+        // base case - if either of the children don't exist; can be inserted their
+        if (p.left == null) { // this method detection might be faulty
+            p.left = new BinaryNode(new KeyValueEntry<K,V>(key, value));
+        }  
+        else if (p.right == null) {
+            p.right = new BinaryNode(new KeyValueEntry<K,V>(key, value));
         }
-        // recursive call - determine if the 
-        if (root.element.compareTo(new KeyValueEntry<K,V>(key, value)) <= 0) { // compare to returns a nu
+        // recursive call - if the e > p; place it in the right subtree, if e <= ; place it in the left subtree
+        if (p.element.compareTo(new KeyValueEntry<K,V>(key, value)) <= 0) { // compare to returns a nu
             insert(key, value, p.left);
         }
-        else if (root.element.compareTo(new KeyValueEntry<K,V>(key, value)) > 0) {
+        else if (p.element.compareTo(new KeyValueEntry<K,V>(key, value)) > 0) {
             insert(key, value, p.right);
         }
         
@@ -107,9 +110,31 @@ public class LinkedBinarySearchTree<K extends Comparable<K>, V> implements Binar
 
     @Override
     public V find(K key) {
-        return null;
+        // check if the key matches the root -ie the base case
+        if  (root.element.compareTo(new KeyValueEntry<K,V>(key, null))== 0) {
+            // if so return the element as found
+            return root.element.getValue();// Without getValue this will return a KeyValueEntry
+        }
+        // otherwise search the rest of the BST through a recursive function
+        return find(key, root);
     }
 
+    private V find(K key, BinaryNode p) {
+        // Base Case  - the key of either of the children == p.key
+        if (p.element.compareTo(new KeyValueEntry<K,V>(key, null)) == 0) {
+            return p.element.getValue(); // return the value of the child that matches the key
+        }
+        
+        // otherwise check which side of the tree that the element is
+        // recursive call - if the e > p; place it in the right subtree, if e <= ; place it in the left subtree
+        if (p.element.compareTo(new KeyValueEntry<K,V>(key, null)) <= 0) { // compare to returns a nu
+            return find(key, p.left);
+        }
+        else if (p.element.compareTo(new KeyValueEntry<K,V>(key, null)) > 0) {
+            return find(key, p.right);
+        }
+        throw new NoSuchElementException("The element was not in the BST | or some other weird error has occured"); // need to double check what exception type would be appropriate
+    }
     @Override
     public V findMin() {
         return null;
