@@ -14,8 +14,8 @@
  */
 public class PasswordManager {
 
-    private ChainingHashTable hashTable;
-    private LinkedBinarySearchTree binarySearchTree;
+    private ChainingHashTable hashTable = new ChainingHashTable<>();
+    private LinkedBinarySearchTree binarySearchTree = new LinkedBinarySearchTree<>();
 
     /**
      * Adds a new credential to the password manager. 
@@ -36,10 +36,13 @@ public class PasswordManager {
         // determine the comparable key based on the site
         String comparableKey = String.valueOf(site.hashCode());
         try {
-            // Check first if a value is already within the BST or hashtable
-            if (binarySearchTree.contains(comparableKey) || hashTable.contains(comparableKey)) {
-                throw new IllegalArgumentException("Duplicate Entry " + comparableKey + "already exists");
-            }
+            // check if key already within BST or hashtable
+            if (!binarySearchTree.isEmpty() || !binarySearchTree.isEmpty()) {    
+                if (binarySearchTree.contains(comparableKey) || hashTable.contains(comparableKey)) {
+                    throw new IllegalArgumentException("Duplicate Entry " + comparableKey + "already exists");
+                } // if - contains
+            } // if - is empty
+            
             // if no such value exists then insert the data
             binarySearchTree.insert(comparableKey, newCredential);
             hashTable.insert(comparableKey, newCredential);

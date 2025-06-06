@@ -67,7 +67,7 @@ public class LinkedBinarySearchTree<K extends Comparable<K>, V> implements Binar
         // if empty insert at the root
         if (size() == 0) {
             root = new BinaryNode(new KeyValueEntry<K,V>(key, value));
-            return;
+            return; // stop execution as node has been inserted
         }
         // otherwise find where to insert
         else {
@@ -78,22 +78,41 @@ public class LinkedBinarySearchTree<K extends Comparable<K>, V> implements Binar
 
     // private method for recursive calls
     private void insert(K key, V value, BinaryNode p) {
-        // base case - if either of the children don't exist; the node can be inserted in the 
-        if (p.left == null || p.right == null) {
-            if (p.left == null) { // this method detection might be faulty
-                p.left = new BinaryNode(new KeyValueEntry<K,V>(key, value));
-            }  
-            else if (p.right == null) {
-                p.right = new BinaryNode(new KeyValueEntry<K,V>(key, value));
-            } // if - specific child
+        // base case - if no children; insert node there
+        if (p.left == null && p.right == null) { 
+            p.left = new BinaryNode(new KeyValueEntry<K,V>(key, value));
         } // if - either child
+        System.out.println("");
 
-        // recursive call - if the e > p; place it in the right subtree, if e <= ; place it in the left subtree
-        if (p.element.compareTo(new KeyValueEntry<K,V>(key, value)) <= 0) { // compareTo returns a negative integer, zero or a postive integer, as e.key is <, ==, > p.key
-            insert(key, value, p.left); // if e <= p, place in the left subtree
+        System.out.println("insert recurisve call");
+        // additional recursive call to account for only one possible subtree --> check if only 1 child
+        if (p.right == null && p.left != null) {
+
         }
+
+
+        /* 
+        find which direction the element needs to be inserted
+        if the e > p; place it in the right subtree, if e <= ; place it in the left subtree
+        */
+        if (p.element.compareTo(new KeyValueEntry<K,V>(key, value)) <= 0) { // compareTo returns a negative integer, zero or a postive integer, as e.key is <, ==, > p.key
+            if (p.left != null) { // check if a recursive call is needed; whether a left sub tree exists 
+                insert(key, value, p.left); // if e <= p, search the left subtree for the insertion point
+            }
+            else { // base case- the position where the element needs to be placed has been found
+                p.left = new BinaryNode(new KeyValueEntry<K,V>(key, value)); // insert the node in the empty position
+            }          
+        }
+
         else if (p.element.compareTo(new KeyValueEntry<K,V>(key, value)) > 0) {
-            insert(key, value, p.right); // if e > p, place in the right subtree
+            if (p.right != null) { // check if a recursive call is needed; whether a right sub tree exists 
+                insert(key, value, p.right); // if e > p, search the right subtree for the insertion point
+            }
+            else { // base case- the position where the element needs to be placed has been found
+                p.right = new BinaryNode(new KeyValueEntry<K,V>(key, value));
+            }
+
+            
         }
 
         
