@@ -3,8 +3,8 @@
  * It contains the site name, username, and password, each of which is a string.
  * The class provides methods to get and set the username and password, as well as a method to return a string representation of the credential.
  * 
- * @author <your name> <student number>
- * @version <version>, <date>
+ * @author <Patrick Kemmis> <c3430982>
+ * @version <1.0>, <6/6/25>
  */
 public class Credential {
 
@@ -75,6 +75,6 @@ public class Credential {
      */
     @Override
     public String toString() {
-        return site+" Username: "+username+", Password: "+password;
+        return "["+site+"] Username: "+username+", Password: "+password;
     }
 }

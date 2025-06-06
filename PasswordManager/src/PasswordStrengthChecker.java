@@ -4,8 +4,8 @@ import java.util.NoSuchElementException;
  * A simple password strength checker, which is defined by a static method.
  * It evaluates the strength of a password based on length, character types, and complexity.
  * 
- * @author <your name> <student number>
- * @version <version>, <date>
+ * @author <Patrick Kemmis> <c3430982>
+ * @version <1.0>, <6/6/25>
  */
 public class PasswordStrengthChecker {
     /**

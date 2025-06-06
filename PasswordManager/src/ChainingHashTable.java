@@ -8,8 +8,8 @@ import java.util.LinkedList;
  * The hash table uses the (existing) hashCode() method of the key to determine the index in the table.
  * Note: the hashCode() method may return negative values, so you should use Math.abs() to ensure the index is non-negative.
  * 
- * @author <your name> <student number>
- * @version <version>, <date>
+ * @author <Patrick Kemmis> <c3430982>
+ * @version <1.0>, <6/6/25>
  */
 /**
  * Theory Notes:

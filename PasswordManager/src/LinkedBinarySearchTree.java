@@ -5,8 +5,8 @@ import java.util.LinkedList;
 /**
  * This class implements a binary search tree using linked nodes.
  * 
- * @author <your name> <student number>
- * @version <version>, <date>
+ * @author <Patrick Kemmis> <c3430982>
+ * @version <1.0>, <6/6/25>
  */
 public class LinkedBinarySearchTree<K extends Comparable<K>, V> implements BinarySearchTreeADT<K, V> {
 

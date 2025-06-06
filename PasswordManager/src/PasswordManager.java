@@ -7,8 +7,10 @@
  * The hash table is used for fast access to credentials by site name (which is the key of the entries),
  * while the binary search tree is used for ordered traversal of credentials (also using the site name as the key).
  * 
- * @author <your name> <student number>
- * @version <version>, <date>
+ * Therefor whenever an entry is created, updated or deleted the action needs to take place in both the BST & the Hash Table
+ * 
+ * @author <Patrick Kemmis> <c3430982>
+ * @version <1.0>, <6/6/25>
  */
 public class PasswordManager {
 
