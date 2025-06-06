@@ -36,11 +36,16 @@ public class PasswordManager {
         // determine the comparable key based on the site
         String comparableKey = String.valueOf(site.hashCode());
         try {
-            // Insert the data into the BST & hashtable
+            // Check first if a value is already within the BST or hashtable
+            if (binarySearchTree.contains(comparableKey) || hashTable.contains(comparableKey)) {
+                throw new IllegalArgumentException("Duplicate Entry " + comparableKey + "already exists");
+            }
+            // if no such value exists then insert the data
             binarySearchTree.insert(comparableKey, newCredential);
             hashTable.insert(comparableKey, newCredential);
         }
         catch (Exception e) { // exceptions caught related to a credential alreay existing
+            System.out.println(e.getMessage()); // print out the relevant error message that caused the error
             return false; // failure to excute insertion on either BST or hashtable
         }
         // if neither method throws an error than the data has been succesfully inserted
@@ -58,8 +63,23 @@ public class PasswordManager {
      * @return true if the credential was updated successfully, false if the site does not exist
      */
     public boolean updateCredential(String site, String newUsername, String newPassword) {
+        Credential newCredential = new Credential(site, newUsername, newPassword);
+        // determine the comparable key based on the site
         String comparableKey = String.valueOf(site.hashCode());
-        return false;
+        
+        // check if the site exists 
+        if (hashTable.contains(comparableKey)) {
+            return false; // the site did not exist whithin the system
+        }
+        
+        
+        // update the data within the BST & hashtable
+        binarySearchTree.insert(comparableKey, newCredential);
+        hashTable.insert(comparableKey, newCredential);
+        
+        
+        // if neither method throws an error than the data has been succesfully inserted
+        return true;
     }
 
     /**
