@@ -27,6 +27,15 @@ public class ChainingHashTable<K extends Comparable<K>,V> implements HashTableAD
         //V[] associativeArray = new V[numCells];
     }
 
+    /*
+     * in the ADT documentation a insertion of the same key type just updats the value at that location.
+     *      this kind of operation would remove the need for collision resolution
+     *      because collisions are handled purely by replacing the element
+     *  
+     * 
+     * 
+     * 
+     */
     @Override
     public boolean insert(K key, V value) {
         // key.hashCode() returns a unique integer based on that key
