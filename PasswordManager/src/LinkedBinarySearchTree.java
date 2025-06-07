@@ -16,7 +16,6 @@ public class LinkedBinarySearchTree<K extends Comparable<K>, V> implements Binar
      *  parent - is a tempary node for 
      */
     private BinaryNode root;
-    private BinaryNode parent;
     private int size;
     /**
      * A node in a binary tree.
@@ -60,13 +59,14 @@ public class LinkedBinarySearchTree<K extends Comparable<K>, V> implements Binar
     }
 
     /**
-     * Initial 
+     * Note that the size is only incremented if there is not an element at the 
      */
     @Override
     public void insert(K key, V value) {
         // if empty insert at the root
-        if (size() == 0) {
+        if (root == null) {
             root = new BinaryNode(new KeyValueEntry<K,V>(key, value));
+            size ++;
             return; // stop execution as node has been inserted
         }
         // otherwise find where to insert

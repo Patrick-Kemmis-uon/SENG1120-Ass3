@@ -16,8 +16,7 @@ import java.util.LinkedList;
  *  a hash table is an implementation of an associative array that uses a hash function for key generation
  */
 public class ChainingHashTable<K extends Comparable<K>,V> implements HashTableADT<K,V> {
-    private LinkedList<V> cellLinkedList; // LL decleration for individual cells which allows chaining for collision resoulution
-    private V[] associativeArray;
+    private LinkedList<V>[] associativeArray;// LL decleration for individual cells collision resoulution strategy
 
     // I think that this might have to be an array of LL's
     //private V[] associativeArray; // Decleration of the associative array referencing the individual cellsLL for chaining
@@ -27,7 +26,10 @@ public class ChainingHashTable<K extends Comparable<K>,V> implements HashTableAD
 
     public ChainingHashTable(int numCells){
         // Cast the array to a generic type after compilation - typical array decleration will result in an error
-        associativeArray = (V[]) new Object[numCells];
+        associativeArray = (LinkedList<V>[]) new Object[numCells];
+        for (LinkedList<V> index : associativeArray) {
+            index = new LinkedList<>(); // declare each index with the start of a LL
+        }
     }
 
     private int getIndex(K key) {
@@ -44,14 +46,16 @@ public class ChainingHashTable<K extends Comparable<K>,V> implements HashTableAD
      */
     @Override
     public boolean insert(K key, V value) {
-        // key.hashCode() returns a unique integer based on that key
+        // key.hashCode() returns a semi-unique integer based on the key
         int index = key.hashCode() % size();
         System.out.println(index);
         // check if the value already exists within the hashtable
-        if (associativeArray[index]) {
-            
+        if (associativeArray[index] != null) {
+            if (associativeArray[index] == key) {// check whether it is the same key
+
+            }
         }
-        associativeArray[index] = value; // insert the 
+        associativeArray[index].add(value); // insert the 
         throw new UnsupportedOperationException("Unimplemented method 'insert'");
     }
 
@@ -59,7 +63,7 @@ public class ChainingHashTable<K extends Comparable<K>,V> implements HashTableAD
     public V remove(K key) {
         // Determine the index
         int index = key.hashCode() % size();
-        V valueAtIndex = associativeArray[index];
+        V valueAtIndex = associativeArray[index].getFirst();
         associativeArray[index] = null;
         return valueAtIndex;
     }
@@ -82,7 +86,7 @@ public class ChainingHashTable<K extends Comparable<K>,V> implements HashTableAD
 
     @Override
     public int size() {
-        return size;
+        return 0;
     }
 
     @Override
