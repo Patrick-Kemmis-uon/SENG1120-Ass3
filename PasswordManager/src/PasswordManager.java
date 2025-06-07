@@ -33,19 +33,19 @@ public class PasswordManager {
     @SuppressWarnings("unchecked") // Gets rid of yellow underlines due to some type safety warnings
     public boolean addCredential(String site, String username, String password) {
         Credential newCredential = new Credential(site, username, password);
-        // determine the comparable key based on the site
-        String comparableKey = String.valueOf(site.hashCode());
+        // the comparble key is the site name
+        String comparableKey = site;
         try {
             // check if key already within BST or hashtable
-            if (!binarySearchTree.isEmpty() || !binarySearchTree.isEmpty()) {    
-                if (binarySearchTree.contains(comparableKey) || hashTable.contains(comparableKey)) {
-                    throw new IllegalArgumentException("Duplicate Entry " + comparableKey + "already exists");
+            if (!binarySearchTree.isEmpty() || !hashTable.isEmpty()) {    
+                if (hashTable.contains(site)) { // Check whether the entry already exists
+                    throw new IllegalArgumentException("Duplicate Entry " + site + "already exists");
                 } // if - contains
             } // if - is empty
             
             // if no such value exists then insert the data
-            binarySearchTree.insert(comparableKey, newCredential);
-            hashTable.insert(comparableKey, newCredential);
+            binarySearchTree.insert(site, newCredential);
+            hashTable.insert(site, newCredential);
         }
         catch (Exception e) { // exceptions caught related to a credential alreay existing
             System.out.println(e.getMessage()); // print out the relevant error message that caused the error
@@ -93,10 +93,15 @@ public class PasswordManager {
      * @return the credential for the site, or null if it does not exist
      */
     public Credential getCredential(String site) {
-        return null;
+        if (hashTable.isEmpty()) {return null;} // there are no credentials because the data strucutres are empty therefor return null
+        
+        if (!hashTable.contains(site)) { // check if the credential exists
+            return null; // if it already exists return null
+        }
+        return (Credential)hashTable.get(site);
     }
 
-        /**
+    /**
      * Removes a credential from the password manager by site name.
      * The credential is removed from both the hash table and the binary search tree.
      * 
@@ -104,6 +109,7 @@ public class PasswordManager {
      * @return true if the credential was removed successfully, false if the site does not exist
      */
     public boolean removeCredential(String site) {
+        
         return false;
     }
 
