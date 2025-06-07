@@ -155,7 +155,7 @@ public class LinkedBinarySearchTree<K extends Comparable<K>, V> implements Binar
         throw new NoSuchElementException("The element was not in the BST | or some other weird error has occured"); // need to double check what exception type would be appropriate
     }
     // same functionality as normal except that the return type == BinaryNode, thus acting as a helper method for remove
-    public BinaryNode findForRemove(K key) {
+    private BinaryNode findForRemove(K key) {
         // check if the key matches the root -ie the base case
         if  (root.element.compareTo(new KeyValueEntry<K,V>(key, null))== 0) {
             // if so return the element as found
@@ -207,87 +207,102 @@ public class LinkedBinarySearchTree<K extends Comparable<K>, V> implements Binar
      */
     @Override
     public void remove(K key) {
-        // Temporary node for 
-        BinaryNode found;
+        // Node to indicate node to be deleted
+        BinaryNode found = null;
         // start at the root & search for the element
         if (root.element.compareTo(new KeyValueEntry<K,V>(key, null)) == 0) {
             // then the node found is the root
             found = root;
         }
-    
         // if it is not the root : search the rest of the tree
-        // encapsulate in a try catch
-        found = findForRemove(key);
-        // check if found == null
-        // check for base case where no children
-        // Once the element has been found - find the successor such that the tree does not become disconnected
-        BinaryNode replacementNode;
-        replacementNode = findLeftMost(found);
-
-        found = replacementNode;
-    }
-
-    // recursive remove to keep in mind pointers -- remove in the right direction
-    private BinaryNode remove(K key, BinaryNode p) { 
-        // Base Case - if it is == then remove
+        try {
+            found = findForRemove(key);
+        }
+        catch (NoSuchElementException e) {        
+            System.out.println(e.getMessage());
+        }
         
-        // find the element
-        if (p.element.compareTo(new KeyValueEntry<K,V>(key, null)) <= 0) { // if the e <= p
-            
-            return p.left = remove(key, p.left); //return the left subtree & update the left pointer so that the tree does not become disconnected
+        // call the recursive function remove to delete the node
+        try {
+            remove(found);
         }
-        else if (p.element.compareTo(new KeyValueEntry<K,V>(key, null)) <= 0) { // if the e > p
-            return p.right = remove(key, p.right); // return the right subtree & update the right pointer so that the tree does not become disconnected
+        catch (NoSuchElementException e) {
+            System.out.println(e.getMessage());
         }
-
-        // ElementNotFoundException - there is no further nodes
-        if (p.left == null && p.right == null) {
-            throw new NoSuchElementException("No Such elemeent within the Binary Search Tree");
-        }
-        p.right = remove(key, p.right);
-        return null;
-    }
-
-    // note that because this funciton only returns a V it can not be effectively used for the remove funcitonality
-    @Override
-    public V findMin() {
-        return null;
-    }
-
-
-    // recursive function -- THIS FUNCTION COULD result in a stackOverflow because of an infiinite loop
-    private BinaryNode findLeftMost(BinaryNode p) {
-        // Base Case - p.left && p.right == null
-        if (p.left == null && p.right == null) {
-            BinaryNode temp = p;
-            p = null; // remove the node
-            return temp;
-        }
-        // Check if p.left == null && if p.right 
-        else if (p.right != null) {
-            return findLeftMost(p.right);
-        }
-        // otherwise find the leftmost node
         
+        
+    }
+
+    // private helper method used to swap nodes within the BST
+    private BinaryNode swap(BinaryNode x, BinaryNode y) {
+        KeyValueEntry<K,V> tempElement = x.element;
+        x.element = y.element;
+        y.element = tempElement;
+        return x;
+    }
+    // recursive remove
+    private void remove(BinaryNode node) { 
+        // check that node is not null
+        if (node == null) {
+            throw new NoSuchElementException("The element was not in the BST from remove(recursive)");
+        }
+        BinaryNode nodeToSwap;
+        // Base Case - node is a leaf & can be deleted
+        if (node.left == null && node.right == null) {
+            node = null; // delete the node
+        }
+        else if (node.right != null) { // if the node has a right node find its successor i.e the leftmost node in the right subtree
+            nodeToSwap = findLeftMost(node.right); // find the leftmost node
+            node = swap(node, nodeToSwap);
+            remove(node); // call the function recursively to account for this node have it's own subtrees
+        }
+        else if (node.left != null) { // if the node to be deleted only has a left node then find the predeccessor : the rightmost node in the left subtree
+            nodeToSwap = findRightMost(node.left);
+            node = swap(node, nodeToSwap);
+            remove(node); // call the function recursively to ensure that 
+        }
+
+        
+    }
+    // find the leftmost node in the subtree
+    private BinaryNode findLeftMost(BinaryNode p) {       
+        if (p.left == null ) { // check if parent has a left node
+            return p; // if it doesn't not then p will be the successor
+        }
         // Initialise a tempary node used to find the leftmost node
         BinaryNode current = p.left;
         // loop through all
         do {
             current = current.left;
         }
-        while (current.left != null); // only leave the loop once the leftmost node == null -->
-        //     L--> note that current will be the parent of left which == null so current will therefor be the leftmost assuming no right subtree
-        // check for a right subtree
-        if (current.right != null) {
-            return findLeftMost(p.right); // if there is a right subtree call function recursively so as not to disconnect the subtree
+        while (current.left == null); // leave when the left child of current is null : indicates that current is leftmost
+        // return the leftmost node
+        return current;
+    }
+    // find the right most node in the subtree
+    private BinaryNode findRightMost(BinaryNode p) {       
+        if (p.right == null ) { // check if parent has a right node
+            return p; // if it doesn't not then p will be the predeccessor
         }
-        // Additional BaseCase if there is not a right subtree return current
+        // Initialise a tempary node used to find the rightmost node
+        BinaryNode current = p.right;
+        // loop through all
+        do {
+            current = current.right;
+        }
+        while (current.right == null); // leave when the right child of current is null : indicates that current is rightmost
+        // return the rightmost node
         return current;
     }
     // if it is the 2nd case & null left will likely need to find the predessor
+    // makes use of a private helper method findLeftMost to find the minimum within the subtree
+    @Override
+    public V findMin() {
+        return findLeftMost(root).element.getValue(); // the leftmost node from the root will be the minium within the tree
+    }
     @Override
     public V findMax() {
-        return null;
+        return findRightMost(root).element.getValue(); // the rightmost node from the root will be the maxiumum within the tree
     }
 
     @Override
@@ -307,6 +322,9 @@ public class LinkedBinarySearchTree<K extends Comparable<K>, V> implements Binar
 
     @Override
     public boolean isEmpty() {
+        if (root == null) {
+            return true;
+        }
         return false;
     }
 

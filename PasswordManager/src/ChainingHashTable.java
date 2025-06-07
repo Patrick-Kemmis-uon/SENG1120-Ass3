@@ -17,6 +17,8 @@ import java.util.LinkedList;
  */
 public class ChainingHashTable<K extends Comparable<K>,V> implements HashTableADT<K,V> {
     private LinkedList<V> cellLinkedList; // LL decleration for individual cells which allows chaining for collision resoulution
+    private V[] associativeArray;
+
     // I think that this might have to be an array of LL's
     //private V[] associativeArray; // Decleration of the associative array referencing the individual cellsLL for chaining
     public ChainingHashTable() {
@@ -24,9 +26,13 @@ public class ChainingHashTable<K extends Comparable<K>,V> implements HashTableAD
     }
 
     public ChainingHashTable(int numCells){
-        //V[] associativeArray = new V[numCells];
+        // Cast the array to a generic type after compilation - typical array decleration will result in an error
+        associativeArray = (V[]) new Object[numCells];
     }
 
+    private int getIndex(K key) {
+        return key.hashCode() % size();
+    }
     /*
      * in the ADT documentation a insertion of the same key type just updats the value at that location.
      *      this kind of operation would remove the need for collision resolution
@@ -34,23 +40,33 @@ public class ChainingHashTable<K extends Comparable<K>,V> implements HashTableAD
      *  
      * 
      * 
-     * 
+     *  Key passed in is already unique as handled by the password manager
      */
     @Override
     public boolean insert(K key, V value) {
         // key.hashCode() returns a unique integer based on that key
         int index = key.hashCode() % size();
         System.out.println(index);
+        // check if the value already exists within the hashtable
+        if (associativeArray[index]) {
+            
+        }
+        associativeArray[index] = value; // insert the 
         throw new UnsupportedOperationException("Unimplemented method 'insert'");
     }
 
     @Override
     public V remove(K key) {
-        return null;
+        // Determine the index
+        int index = key.hashCode() % size();
+        V valueAtIndex = associativeArray[index];
+        associativeArray[index] = null;
+        return valueAtIndex;
     }
 
     @Override
     public V get(K key) {
+        //         
         return null;
     }
 
@@ -66,7 +82,7 @@ public class ChainingHashTable<K extends Comparable<K>,V> implements HashTableAD
 
     @Override
     public int size() {
-        return 0;
+        return size;
     }
 
     @Override
