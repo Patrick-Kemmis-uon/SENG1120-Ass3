@@ -51,11 +51,17 @@ public class ChainingHashTable<K extends Comparable<K>,V> implements HashTableAD
         System.out.println(index);
         // check if the value already exists within the hashtable
         if (associativeArray[index] != null) {
-            if (associativeArray[index] == key) {// check whether it is the same key
+            if (associativeArray[index].getFirst() == key) {// check whether it is the same key
+                // update the value at the point
+                associativeArray[index].removeFirst();
+                associativeArray[index].addFirst(value); // replace the element with the updated value
+                return true;
+            }
+            else {// if it is not the same 
 
             }
         }
-        associativeArray[index].add(value); // insert the 
+        associativeArray[index].add(value); // insert the value at the index
         throw new UnsupportedOperationException("Unimplemented method 'insert'");
     }
 
@@ -63,25 +69,36 @@ public class ChainingHashTable<K extends Comparable<K>,V> implements HashTableAD
     public V remove(K key) {
         // Determine the index
         int index = key.hashCode() % size();
-        V valueAtIndex = associativeArray[index].getFirst();
-        associativeArray[index] = null;
+        V valueAtIndex = associativeArray[index].getFirst(); // get the element at the index
+        associativeArray[index].removeFirst();
         return valueAtIndex;
     }
 
     @Override
     public V get(K key) {
-        //         
-        return null;
+        // find the index of the element based on the key
+        int index = key.hashCode() % size();
+        return associativeArray[index].getFirst();
     }
 
     @Override
     public boolean contains(K key) {
+        int index = key.hashCode() % size();
+        if (associativeArray[index].getFirst() != null) { // Check whether their exists a key at that index
+            return true;
+        }       
         return false;
     }
 
+    // check the entire array to see if it is empty
     @Override
     public boolean isEmpty() {
-        return false;
+        for (LinkedList<V> element : associativeArray) {
+            if (element.getFirst() != null) {// check if there is an element at the index
+                return false; // if there is then the hash table is not empty
+            }
+        }
+        return true; // the entire array has been searched and no elements have been found therefor the hash table is empty
     }
 
     @Override
@@ -91,6 +108,9 @@ public class ChainingHashTable<K extends Comparable<K>,V> implements HashTableAD
 
     @Override
     public void clear() {
-        
+        // Loop through the hash table & clear every linked list cell
+        for (LinkedList<V> element : associativeArray) {
+            element.clear(); // clear the linked list cell
+        }
     }
 }
