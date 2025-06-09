@@ -78,39 +78,32 @@ public class LinkedBinarySearchTree<K extends Comparable<K>, V> implements Binar
 
     // private method for recursive calls
     private void insert(K key, V value, BinaryNode p) {
-        // base case - if no children; insert node there
-        if (p.left == null && p.right == null) { 
-            p.left = new BinaryNode(new KeyValueEntry<K,V>(key, value));
-            return;
-        } // if - either child
-        System.out.println("");
-
-        System.out.println("insert recurisve call");
-        // additional recursive call to account for only one possible subtree --> check if only 1 child
-        if (p.right == null && p.left != null) {
-
-        }
-
+        System.out.println("insert recurisve call with value: " + value + p.element.getValue());
 
         /* 
         find which direction the element needs to be inserted
         if the e > p; place it in the right subtree, if e <= ; place it in the left subtree
         */
-        if (p.element.compareTo(new KeyValueEntry<K,V>(key, value)) <= 0) { // compareTo returns a negative integer, zero or a postive integer, as e.key is <, ==, > p.key
-            if (p.left != null) { // check if a recursive call is needed; whether a left sub tree exists 
-                insert(key, value, p.left); // if e <= p, search the left subtree for the insertion point
+        
+        if (p.element.compareTo(new KeyValueEntry<K,V>(key, value)) <= 0) { // compareTo returns a negative integer, zero or a postive integer, as e.key is <, ==, > p.key            
+            if (p.right != null) { // check if a recursive call is needed; whether a left sub tree exists 
+                System.out.println("recursing right");
+                insert(key, value, p.right); // if e <= p, search the left subtree for the insertion point
             }
             else { // base case- the position where the element needs to be placed has been found
-                p.left = new BinaryNode(new KeyValueEntry<K,V>(key, value)); // insert the node in the empty position
+                p.right = new BinaryNode(new KeyValueEntry<K,V>(key, value)); // insert the node in the empty position
+                System.out.println("p.right = " + value);
             }          
         }
 
         else if (p.element.compareTo(new KeyValueEntry<K,V>(key, value)) > 0) {
-            if (p.right != null) { // check if a recursive call is needed; whether a right sub tree exists 
-                insert(key, value, p.right); // if e > p, search the right subtree for the insertion point
+            if (p.left != null) { // check if a recursive call is needed; whether a right sub tree exists 
+                System.out.println("recursing left");
+                insert(key, value, p.left); // if e > p, search the right subtree for the insertion point
             }
             else { // base case- the position where the element needs to be placed has been found
-                p.right = new BinaryNode(new KeyValueEntry<K,V>(key, value));
+                p.left = new BinaryNode(new KeyValueEntry<K,V>(key, value));
+                System.out.println("p.left = " + value);
             }
 
             
@@ -336,10 +329,10 @@ public class LinkedBinarySearchTree<K extends Comparable<K>, V> implements Binar
         System.out.println("function inOrderTraversal called with parameters : " + node + list.toString());
         // if the BST is empty just return the head
         if (root == null) { return null; }    
-        // if both chilren are null then this node is a leaf
-        if (node.left == null && node.right == null) {
-            list.add(node.element.getValue()); // add the leaf node to the list
-        }
+        // if both chilren are null then this node is a leaf;
+        //if (node.left == null && node.right == null) {;
+        //    list.add(node.element.getValue()); // add the leaf node to the list;
+        //};
         
         
         // add the furthest left node to the list first
@@ -353,6 +346,8 @@ public class LinkedBinarySearchTree<K extends Comparable<K>, V> implements Binar
             // add the parent node to the list
             //list.add(node.element.getValue());
         }
+        list.add(node.element.getValue());
+        System.out.println("added parent node; " + node.element.getValue());
         // check for a right subtree
         if (node.right != null) {
             inOrderTraversal(node.right, list); // dive deeper into the right subtree
