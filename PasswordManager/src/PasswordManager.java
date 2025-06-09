@@ -1,3 +1,4 @@
+import java.util.Iterator;
 
 /**
  * A class to manage user credentials for different sites.
@@ -46,7 +47,7 @@ public class PasswordManager {
 
         try {
             // check if key already within BST or hashtable
-            if (!binarySearchTree.isEmpty() || !hashTable.isEmpty()) {    
+            if (!binarySearchTree.isEmpty()) { // call BST isEmpty() because it has a lower time complexity
                 if (hashTable.contains(site)) { // Check whether the entry already exists
                     throw new IllegalArgumentException("Duplicate Entry " + site + "already exists");
                 } // if - contains
@@ -57,6 +58,7 @@ public class PasswordManager {
             hashTable.insert(site, newCredential);
         }
         catch (Exception e) { // exceptions caught related to a credential alreay existing
+            e.printStackTrace();
             System.out.println(e.getMessage()); // print out the relevant error message that caused the error
             return false; // failure to excute insertion on either BST or hashtable
         }
@@ -81,7 +83,9 @@ public class PasswordManager {
         
         // check if the site exists 
         if (hashTable.contains(comparableKey)) {
+            System.out.println("The requested site: " + site + "did not match any within our system");
             return false; // the site did not exist whithin the system
+            
         }
         
         
@@ -130,9 +134,14 @@ public class PasswordManager {
      * Results are printed one per line, and should be printed using the string representation of the Credential object.
      */
     public void listAllCredentials() {
-        // 
-        
-        
+        // return the Binary Search Tree iterator
+        Iterator<Credential> i = binarySearchTree.iterator();
+        // loop through all values
+        if (i != null) {
+            while (i.hasNext()){
+                System.out.println(i.next());
+            }
+        }
     }
 
     /**
@@ -145,7 +154,16 @@ public class PasswordManager {
      * where <Credential> is the string representation of the Credential object, and <strength> is the strength of the password.
      */
     public void checkAllCredentials() {
+        // return the Binary Search Tree iterator
+        Iterator<Credential> i = binarySearchTree.iterator();
+        // loop through all values
+        if (i != null) {
+            while (i.hasNext()){
+                
 
+                //System.out.println();
+            }
+        }
     }
 
 

@@ -1,6 +1,6 @@
 import java.util.Iterator;
-import java.util.NoSuchElementException;
 import java.util.LinkedList;
+import java.util.NoSuchElementException;
 
 /**
  * This class implements a binary search tree using linked nodes.
@@ -68,11 +68,12 @@ public class LinkedBinarySearchTree<K extends Comparable<K>, V> implements Binar
      */
     @Override
     public void insert(K key, V value) {
+        System.out.println("inserting credential with site name: " + key);
         // if empty insert at the root
         if (root == null || root.element == null) {
             root = new BinaryNode(new KeyValueEntry<K,V>(key, value));
             size ++;
-            System.out.println("incremented size, current size = " + size);
+            
             return; // stop execution as node has been inserted
         }
         // otherwise find where to insert
@@ -124,7 +125,7 @@ public class LinkedBinarySearchTree<K extends Comparable<K>, V> implements Binar
 
 
     
-    // same sa find function except it returns a boolean instead of a node or element
+    // same as find function except it returns a boolean instead of a node or element
     @Override
     public boolean contains(K key) {
         // check if the key matches the root -ie the base case
@@ -434,7 +435,10 @@ public class LinkedBinarySearchTree<K extends Comparable<K>, V> implements Binar
     }
     @Override
     public boolean isEmpty() {
-        return root.element == null; // if the root of the tree is null the BST is empty
+        if (root == null || root.element == null) {
+            return true;
+        }
+        return false; // if the root of the tree is null the BST is empty
     }
 
     @Override

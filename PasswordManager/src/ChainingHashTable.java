@@ -34,7 +34,7 @@ public class ChainingHashTable<K extends Comparable<K>,V> implements HashTableAD
     }
 
     private int getIndex(K key) {
-        return key.hashCode() % size(); // hash function modulu size to generate 
+        return key.hashCode(); // hash function modulu size to generate 
     }
     /*
      * in the ADT documentation a insertion of the same key type just updats the value at that location.
@@ -47,8 +47,9 @@ public class ChainingHashTable<K extends Comparable<K>,V> implements HashTableAD
      */
     @Override
     public boolean insert(K key, V value) {
+         System.out.println("inserting into hash, site name: " + key);
         // key.hashCode() returns a semi-unique integer based on the key
-        int index = key.hashCode() % size();
+        int index = key.hashCode();
         System.out.println(index);
         // encapsulate in a try catch 
         try {
@@ -74,7 +75,7 @@ public class ChainingHashTable<K extends Comparable<K>,V> implements HashTableAD
     @Override
     public V remove(K key) {
         // Determine the index
-        int index = key.hashCode() % size();
+        int index = key.hashCode();
         // initialise a temp variable to store the element that was deleted
         V element;
         // loop through the linkedlist cell at the determined index 
@@ -93,7 +94,7 @@ public class ChainingHashTable<K extends Comparable<K>,V> implements HashTableAD
     @Override
     public V get(K key) {
         // determine the index based on the key
-        int index = key.hashCode() % size();
+        int index = key.hashCode();
         // loop through the array at the specified index
         for (KeyValueEntry<K,V> linkedListEntry : associativeArray[index]) {// for each cell in the array
             // compare entry.key to paramter.key
@@ -107,8 +108,11 @@ public class ChainingHashTable<K extends Comparable<K>,V> implements HashTableAD
     /* check if an element exists based on a key within the HashTable */
     @Override
     public boolean contains(K key) {
+        if (isEmpty()) { // there is nothing in the hash table
+            return false;
+        }
         // determine the index based on the key
-        int index = key.hashCode() % size();
+        int index = key.hashCode();
         // loop through the array
         for (KeyValueEntry<K,V> linkedListEntry : associativeArray[index]) {// for each cell in the array
             // compare entry.key to paramter.key
@@ -119,9 +123,12 @@ public class ChainingHashTable<K extends Comparable<K>,V> implements HashTableAD
         return false; // either the LL cell was empty or the element was not found in the LL
     }
 
-    // check the entire array to see if it is empty
+    // ensure emptiness by checking that the entire array is empty
     @Override
     public boolean isEmpty() {
+        if (associativeArray == null) {
+            return false;
+        }
         for (LinkedList<KeyValueEntry<K,V>> element : associativeArray) {
             if (!element.isEmpty()) {// if there is an element at the index
                 return false; // return null
