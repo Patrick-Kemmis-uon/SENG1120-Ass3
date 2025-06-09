@@ -35,6 +35,14 @@ public class PasswordManager {
         Credential newCredential = new Credential(site, username, password);
         // the comparble key is the site name
         String comparableKey = site;
+
+
+        /*
+         * there is a risk doing this all together as 
+         * 
+         * 
+         */
+
         try {
             // check if key already within BST or hashtable
             if (!binarySearchTree.isEmpty() || !hashTable.isEmpty()) {    

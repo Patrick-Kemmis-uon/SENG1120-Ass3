@@ -121,17 +121,23 @@ public class LinkedBinarySearchTree<K extends Comparable<K>, V> implements Binar
 
 
     
-
+    // same sa find function except it returns a boolean instead of a node or element
     @Override
     public boolean contains(K key) {
-        return false;
+        // check if the key matches the root -ie the base case
+        if  (root.element.compareTo(new KeyValueEntry<K,V>(key, null))== 0) {            
+            return true; // the element is the root & can therefor be e
+        }
+        // otherwise search the rest of the BST through a recursive function (modular code allows the same function)
+        V found = find(key, root);
+        return found != null; // if found has a value than there matches an element with that index
     }
 
     @Override
     public V find(K key) {
         // check if the key matches the root -ie the base case
         if  (root.element.compareTo(new KeyValueEntry<K,V>(key, null))== 0) {
-            // if so return the element as found
+            // if so return the element as found    
             return root.element.getValue();// Without getValue this will return a KeyValueEntry
         }
         // otherwise search the rest of the BST through a recursive function
@@ -146,11 +152,11 @@ public class LinkedBinarySearchTree<K extends Comparable<K>, V> implements Binar
         
         // otherwise check which side of the tree that the element is
         // recursive call - if the e > p; place it in the right subtree, if e <= ; place it in the left subtree
-        if (p.element.compareTo(new KeyValueEntry<K,V>(key, null)) <= 0) { // compare to returns a nu
-            return find(key, p.left);
-        }
-        else if (p.element.compareTo(new KeyValueEntry<K,V>(key, null)) > 0) {
+        if (p.element.compareTo(new KeyValueEntry<K,V>(key, null)) > 0) {
             return find(key, p.right);
+        }
+        else if (p.element.compareTo(new KeyValueEntry<K,V>(key, null)) <= 0) { // compare to returns a nu
+            return find(key, p.left);
         }
         throw new NoSuchElementException("The element was not in the BST | or some other weird error has occured"); // need to double check what exception type would be appropriate
     }
@@ -173,11 +179,11 @@ public class LinkedBinarySearchTree<K extends Comparable<K>, V> implements Binar
         
         // otherwise check which side of the tree that the element is
         // recursive call - if the e > p; place it in the right subtree, if e <= ; place it in the left subtree
-        if (p.element.compareTo(new KeyValueEntry<K,V>(key, null)) <= 0) { // compare to returns a nu
-            return findForRemove(key, p.left);
-        }
-        else if (p.element.compareTo(new KeyValueEntry<K,V>(key, null)) > 0) {
+        if (p.element.compareTo(new KeyValueEntry<K,V>(key, null)) > 0) {
             return findForRemove(key, p.right);
+        }
+        else if (p.element.compareTo(new KeyValueEntry<K,V>(key, null)) <= 0) { 
+            return findForRemove(key, p.left);
         }
         throw new NoSuchElementException("The element was not in the BST | or some other weird error has occured"); // need to double check what exception type would be appropriate
     }
@@ -207,7 +213,7 @@ public class LinkedBinarySearchTree<K extends Comparable<K>, V> implements Binar
      */
     @Override
     public void remove(K key) {
-        // Node to indicate node to be deleted
+        // tempary binary node which indicate's desired removal
         BinaryNode found = null;
         // start at the root & search for the element
         if (root.element.compareTo(new KeyValueEntry<K,V>(key, null)) == 0) {
@@ -266,7 +272,8 @@ public class LinkedBinarySearchTree<K extends Comparable<K>, V> implements Binar
     }
     // find the leftmost node in the subtree
     private BinaryNode findLeftMost(BinaryNode p) {       
-        if (p.left == null ) { // check if parent has a left node
+        //  check if parent has a left node/or whether p is a node altogether
+        if (p.left == null ) { 
             return p; // if it doesn't not then p will be the successor
         }
         // Initialise a tempary node used to find the leftmost node
@@ -281,7 +288,8 @@ public class LinkedBinarySearchTree<K extends Comparable<K>, V> implements Binar
     }
     // find the right most node in the subtree
     private BinaryNode findRightMost(BinaryNode p) {       
-        if (p.right == null ) { // check if parent has a right node
+        //  check if parent has a left node/or whether p is a node altogether
+        if (p.right == null ) { 
             return p; // if it doesn't not then p will be the predeccessor
         }
         // Initialise a tempary node used to find the rightmost node
@@ -305,16 +313,71 @@ public class LinkedBinarySearchTree<K extends Comparable<K>, V> implements Binar
         return findRightMost(root).element.getValue(); // the rightmost node from the root will be the maxiumum within the tree
     }
 
+    /**
+     * Start with the leftmost node
+     * then return the parent & 
+     * then return the right child
+     * slowly working your way up the tree
+     *    2
+     *   / \
+     *  1   3
+     * 
+     */
     @Override
     public Iterator<V> inorderIterator() {
-        return null;
+        // add nodes to a linked list which can be later iterated over
+        LinkedList<V> inOrderList = new LinkedList<>();
+        // we are passing a list but I am not sure in Java whether this will update the list in memory or just within the function inOrderTraversal()
+        return inOrderTraversal(root, inOrderList).iterator(); 
     }
-
+    // this function uses recursion to iterate through the BST - return type binary node to allow parents to be found
+    private LinkedList<V> inOrderTraversal(BinaryNode node, LinkedList<V> list) {
+        System.out.println("function inOrderTraversal called with parameters : " + node + list.toString());
+        // if the BST is empty just return the head
+        if (root == null) { return null; }    
+        // if both chilren are null then this node is a leaf
+        if (node.left == null && node.right == null) {
+            list.add(node.element.getValue()); // add the leaf node to the list
+        }
+        
+        
+        // add the furthest left node to the list first
+        BinaryNode left = null;
+        // check for a left subtree
+        if (node.left != null) {
+            inOrderTraversal(node.left, list); // dive deeper into the left subtree
+            // add the left node to the list
+            list.add(node.left.element.getValue());
+            System.out.println("added left node:" + node.left.element.getValue());
+            // add the parent node to the list
+            //list.add(node.element.getValue());
+        }
+        // check for a right subtree
+        if (node.right != null) {
+            inOrderTraversal(node.right, list); // dive deeper into the right subtree
+            list.add(node.right.element.getValue()); // add the right node to the list
+            System.out.println("added right node:" + node.right.element.getValue());
+        }
+        return list; // return the completed list
+    }
+    /**
+     * 
+     *    1
+     *   / \
+     *  2   3
+     * 
+     */
     @Override
     public Iterator<V> preorderIterator() {
         return null;
     }
-
+    /**
+     * 
+     *    3
+     *   / \
+     *  1   2
+     * 
+     */
     @Override
     public Iterator<V> postorderIterator() {
         return null;
@@ -322,20 +385,17 @@ public class LinkedBinarySearchTree<K extends Comparable<K>, V> implements Binar
 
     @Override
     public boolean isEmpty() {
-        if (root == null) {
-            return true;
-        }
-        return false;
+        return root == null; // if the root of the tree is null it is therfor empty
     }
 
     @Override
     public int size() {
-        return 0;
+        return size;
     }
 
     @Override
-    public void clear() {
-
+    public void clear() { // delete all nodes within the BST in some sense might be similar to the iterator so potenitally useful to implement that first
+        
     }
 
     /**
@@ -345,7 +405,7 @@ public class LinkedBinarySearchTree<K extends Comparable<K>, V> implements Binar
      */
     @Override
     public Iterator<V> iterator() {
-        return null;
+        return inorderIterator();
     }
 
     /**
@@ -353,14 +413,14 @@ public class LinkedBinarySearchTree<K extends Comparable<K>, V> implements Binar
      * This iterator is used to traverse the tree in a specific order.
      */
     private class TreeIterator implements Iterator<V> {
-
+        Iterator<V> iter;
         /**
          * Constructs a new TreeIterator with the given iterator.
          * This iterator is used to traverse the tree in a specific order.
          * @param iter the iterator to be used for traversal
          */
         public TreeIterator(Iterator<V> iter) {
- 
+            this.iter = iter;
         }
 
         /**
@@ -369,7 +429,7 @@ public class LinkedBinarySearchTree<K extends Comparable<K>, V> implements Binar
          * @return true if there are more elements, false otherwise
          */
         public boolean hasNext()  {
-            return false;
+            return iter.hasNext();
         }
 
         /**
@@ -379,7 +439,10 @@ public class LinkedBinarySearchTree<K extends Comparable<K>, V> implements Binar
          * @return the next element in the iteration
          */
         public V next() throws NoSuchElementException {
-            return null;
+            if (iter.next() == null) { // if the next element is null
+                throw new NoSuchElementException("No more elements within the BST");// throw a new exception
+            }
+            return iter.next();
         }
 
     }
