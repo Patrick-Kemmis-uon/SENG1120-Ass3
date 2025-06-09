@@ -59,15 +59,16 @@ public class App {
     }
     System.out.println("pre-order:"+s);
     System.out.println("should match: 5 3 1 4 6 8 7");
-/*
+
     i = bst.postorderIterator();
     s = "";
     while (i.hasNext()){
-    s += " " + i.next();}
+        s += " " + i.next();
+    }
     System.out.println("post-order:"+s);
     System.out.println("should match: 1 4 3 7 8 6 5");
     
-    */
+    
 
     }
 }

@@ -89,6 +89,7 @@ public class LinkedBinarySearchTree<K extends Comparable<K>, V> implements Binar
             if (p.right != null) { // check if a recursive call is needed; whether a left sub tree exists 
                 System.out.println("recursing right");
                 insert(key, value, p.right); // if e <= p, search the left subtree for the insertion point
+                size ++; // increment the size
             }
             else { // base case- the position where the element needs to be placed has been found
                 p.right = new BinaryNode(new KeyValueEntry<K,V>(key, value)); // insert the node in the empty position
@@ -100,6 +101,7 @@ public class LinkedBinarySearchTree<K extends Comparable<K>, V> implements Binar
             if (p.left != null) { // check if a recursive call is needed; whether a right sub tree exists 
                 System.out.println("recursing left");
                 insert(key, value, p.left); // if e > p, search the right subtree for the insertion point
+                size ++; // increment the size
             }
             else { // base case- the position where the element needs to be placed has been found
                 p.left = new BinaryNode(new KeyValueEntry<K,V>(key, value));
@@ -250,6 +252,8 @@ public class LinkedBinarySearchTree<K extends Comparable<K>, V> implements Binar
         // Base Case - node is a leaf & can be deleted
         if (node.left == null && node.right == null) {
             node = null; // delete the node
+            size --; // decrement the size
+            return; // the function has been completed therefor return
         }
         else if (node.right != null) { // if the node has a right node find its successor i.e the leftmost node in the right subtree
             nodeToSwap = findLeftMost(node.right); // find the leftmost node
@@ -326,22 +330,24 @@ public class LinkedBinarySearchTree<K extends Comparable<K>, V> implements Binar
 
 
 
-    // private helper function which uses recursion to iterate through the BST
+    // private helper function which uses recursion to iterate through the BST & add all nodes to a LL for later iteration
     private LinkedList<V> inorderTraversal(BinaryNode node, LinkedList<V> list) {
-        // if the BST is empty just return the head
+        // if the BST is empty then there are no elements to loop through
         if (root == null) { return null; }    
         
         // check for a left subtree
         if (node.left != null) {
             inorderTraversal(node.left, list); // dive deeper into the left subtree
         }
+
         // Add the node to the list
         list.add(node.element.getValue());
-        System.out.println("added node; " + node.element.getValue());
+
         // check for a right subtree
         if (node.right != null) {
             inorderTraversal(node.right, list); // dive deeper into the right subtree
         }
+
         return list; // return the completed list
     }
     /**
@@ -366,15 +372,14 @@ public class LinkedBinarySearchTree<K extends Comparable<K>, V> implements Binar
         LinkedList<V> list = new LinkedList<>();
         return preorderTraversal(root, list).iterator(); 
     }
-    // private helper function which uses recursion to iterate through the BST
+    // private helper function which uses recursion to iterate through the BST & add all nodes to a LL for later iteration
     private LinkedList<V> preorderTraversal(BinaryNode node, LinkedList<V> list) {
-        System.out.println("preorder traversal recursive function, value = " + node.element.getValue());
-        // if the BST is empty just return the head
+        // if the BST is empty then there are no elements to loop through
         if (root == null) { return null; }  
 
         // Add the node to the list
         list.add(node.element.getValue());
-        System.out.println("added node; " + node.element.getValue());
+
         // check for a left subtree
         if (node.left != null) {
             preorderTraversal(node.left, list); // dive deeper into the left subtree
@@ -384,6 +389,7 @@ public class LinkedBinarySearchTree<K extends Comparable<K>, V> implements Binar
         if (node.right != null) {
             preorderTraversal(node.right, list); // dive deeper into the right subtree
         }
+
         return list; // return the completed list
     }
     /**
@@ -395,9 +401,30 @@ public class LinkedBinarySearchTree<K extends Comparable<K>, V> implements Binar
      */
     @Override
     public Iterator<V> postorderIterator() {
-        return null;
+        // all nodes are added to a linked list which can be later iterated over
+        LinkedList<V> list = new LinkedList<>();
+        return postorderTraversal(root, list).iterator(); 
     }
+    // private helper function which uses recursion to iterate through the BST & add all nodes to a LL for later iteration
+    private LinkedList<V> postorderTraversal(BinaryNode node, LinkedList<V> list) {
+        // if the BST is empty then there are no elements to loop through
+        if (root == null) { return null; }  
 
+        // check for a left subtree
+        if (node.left != null) {
+            postorderTraversal(node.left, list); // dive deeper into the left subtree
+        }
+        
+        // check for a right subtree
+        if (node.right != null) {
+            postorderTraversal(node.right, list); // dive deeper into the right subtree
+        }
+
+        // Add the node to the list
+        list.add(node.element.getValue());
+
+        return list; // return the completed list
+    }
     @Override
     public boolean isEmpty() {
         return root == null; // if the root of the tree is null it is therfor empty
