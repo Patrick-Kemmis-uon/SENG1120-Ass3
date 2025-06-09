@@ -1,3 +1,5 @@
+
+
 /**
  * A class to manage user credentials for different sites.
  * It allows adding, updating, retrieving, listing, checking password strength,
@@ -129,6 +131,8 @@ public class PasswordManager {
      * Results are printed one per line, and should be printed using the string representation of the Credential object.
      */
     public void listAllCredentials() {
+        // 
+        
         
     }
 
