@@ -3,8 +3,10 @@
 
 To Do List:
     1. test the BST implementation 
-        a) implement post order & pre order traversal iterators
-        b) implement clear()
+        a) polish up in order traversal
+        b) implement post order & pre order traversal iterators
+        c) implement clear()
+            make use of a traversal method to delete all elements
     2. complete hashtable
 
     3. complete passwordMangager class

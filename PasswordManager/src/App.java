@@ -50,7 +50,7 @@ public class App {
     System.out.println("in-order:"+s);
     System.out.println("should match: 1 3 4 5 6 7 8");
     
-    /*
+    
 
     i = bst.preorderIterator();
     s = "";
@@ -59,7 +59,7 @@ public class App {
     }
     System.out.println("pre-order:"+s);
     System.out.println("should match: 5 3 1 4 6 8 7");
-
+/*
     i = bst.postorderIterator();
     s = "";
     while (i.hasNext()){
