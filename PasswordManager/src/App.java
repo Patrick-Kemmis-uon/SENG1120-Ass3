@@ -27,7 +27,6 @@ public class App {
             bst.insert(8, "8");
             bst.insert(7, "7");
 
-
             /**
              
     5
@@ -44,30 +43,35 @@ public class App {
     
     Iterator<String> i = bst.inorderIterator();
     String s = "";
-    while (i.hasNext()){
-    s += " " + i.next();
+    if (i != null) {
+        while (i.hasNext()){
+        s += " " + i.next();
+        }
+        System.out.println("in-order:"+s);
+        System.out.println("should match: 1 3 4 5 6 7 8");
     }
-    System.out.println("in-order:"+s);
-    System.out.println("should match: 1 3 4 5 6 7 8");
     
     
 
     i = bst.preorderIterator();
     s = "";
-    while (i.hasNext()){
-        s += " " + i.next();
+    if (i != null) {
+        while (i.hasNext()){
+            s += " " + i.next();
+        }
+        System.out.println("pre-order:"+s);
+        System.out.println("should match: 5 3 1 4 6 8 7");
     }
-    System.out.println("pre-order:"+s);
-    System.out.println("should match: 5 3 1 4 6 8 7");
-
+    
     i = bst.postorderIterator();
     s = "";
-    while (i.hasNext()){
-        s += " " + i.next();
+    if (i != null) {
+        while (i.hasNext()){
+            s += " " + i.next();
+        }
+        System.out.println("post-order:"+s);
+        System.out.println("should match: 1 4 3 7 8 6 5");
     }
-    System.out.println("post-order:"+s);
-    System.out.println("should match: 1 4 3 7 8 6 5");
-    
     
 
     }
