@@ -16,7 +16,7 @@ import java.util.Iterator;
  */
 public class PasswordManager {
 
-    private ChainingHashTable hashTable = new ChainingHashTable<>();
+    private ChainingHashTable hashTable = new ChainingHashTable<>(15);
     private LinkedBinarySearchTree binarySearchTree = new LinkedBinarySearchTree<>();
 
     /**
@@ -48,7 +48,7 @@ public class PasswordManager {
         try {
             // check if key already within BST or hashtable
             if (!binarySearchTree.isEmpty()) { // call BST isEmpty() because it has a lower time complexity
-                if (hashTable.contains(site)) { // Check whether the entry already exists
+                if (binarySearchTree.contains(site)) { // Check whether the entry already exists
                     throw new IllegalArgumentException("Duplicate Entry " + site + "already exists");
                 } // if - contains
             } // if - is empty
@@ -77,22 +77,26 @@ public class PasswordManager {
      * @return true if the credential was updated successfully, false if the site does not exist
      */
     public boolean updateCredential(String site, String newUsername, String newPassword) {
+        // initialise the new credential into a new credential object with the passed parameters
         Credential newCredential = new Credential(site, newUsername, newPassword);
         // determine the comparable key based on the site
-        String comparableKey = String.valueOf(site.hashCode());
+        String comparableKey = site;
         
+        // check if there are any credentials within the tree
+        if (binarySearchTree.isEmpty()) {
+            System.out.println("there are no credentials to update");
+            return false;
+        }
         // check if the site exists 
-        if (hashTable.contains(comparableKey)) {
+        if (!binarySearchTree.contains(comparableKey)) {
             System.out.println("The requested site: " + site + "did not match any within our system");
             return false; // the site did not exist whithin the system
-            
         }
-        
-        
-        // update the data within the BST & hashtable
-        binarySearchTree.insert(comparableKey, newCredential);
-        hashTable.insert(comparableKey, newCredential);
-        
+        // otherwise
+
+        // update the values within the BST & hashTable
+        binarySearchTree.insert(site, newCredential);
+        hashTable.insert(site, newCredential);
         
         // if neither method throws an error than the data has been succesfully inserted
         return true;
@@ -106,12 +110,12 @@ public class PasswordManager {
      * @return the credential for the site, or null if it does not exist
      */
     public Credential getCredential(String site) {
-        if (hashTable.isEmpty()) {return null;} // there are no credentials because the data strucutres are empty therefor return null
+        if (binarySearchTree.isEmpty()) {return null;} // there are no credentials because the data strucutres are empty therefor return null
         
-        if (!hashTable.contains(site)) { // check if the credential exists
-            return null; // if it already exists return null
+        if (hashTable.contains(site) == false) { // check if the credential exists
+            return null; // if it does not exist retrun null
         }
-        return (Credential)hashTable.get(site);
+        return (Credential)hashTable.get(site); // otherwise return the 
     }
 
     /**
@@ -122,8 +126,22 @@ public class PasswordManager {
      * @return true if the credential was removed successfully, false if the site does not exist
      */
     public boolean removeCredential(String site) {
+        // set the site name as the comparable key
+        String comparableKey = site;
         
-        return false;
+        // check whether the BST is empty
+        if (binarySearchTree.isEmpty()) {return false; }// there were no elements to be removed
+
+        // call the remove function in both BST & hash table to remove elements that match the site name
+        try {
+            binarySearchTree.remove(site);
+            hashTable.remove(site);
+            
+        } catch (Exception e) {
+            System.out.print(e.getMessage());
+            e.printStackTrace();
+        }
+        return true; // the elements have been deleted successfullly with no errors
     }
 
     /**
@@ -156,12 +174,16 @@ public class PasswordManager {
     public void checkAllCredentials() {
         // return the Binary Search Tree iterator
         Iterator<Credential> i = binarySearchTree.iterator();
+        Credential current;
+        String password;
+        String passwordStrength;
         // loop through all values
         if (i != null) {
             while (i.hasNext()){
-                
-
-                //System.out.println();
+                current = i.next();
+                password = current.getPassword();
+                passwordStrength = PasswordStrengthChecker.evaluate(password);
+                System.out.println(current + ", Password strength: " + passwordStrength);
             }
         }
     }
