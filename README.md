@@ -6,8 +6,7 @@ To Do List:
         a) implement post order & pre order traversal iterators
         b) implement clear()
     2. complete hashtable
-        a) collision resolution - LL cells
-        b) how to check the key when inserting into the hashmap
+
     3. complete passwordMangager class
         a) work through each of the methods 1 by 1
         b)

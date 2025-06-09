@@ -1,5 +1,4 @@
 
-
 /**
  * A class to manage user credentials for different sites.
  * It allows adding, updating, retrieving, listing, checking password strength,
@@ -34,14 +33,14 @@ public class PasswordManager {
     
     @SuppressWarnings("unchecked") // Gets rid of yellow underlines due to some type safety warnings
     public boolean addCredential(String site, String username, String password) {
+        // initialise the new credential into a new credential object with the passed parameters
         Credential newCredential = new Credential(site, username, password);
         // the comparble key is the site name
         String comparableKey = site;
 
 
         /*
-         * there is a risk doing this all together as 
-         * 
+         * Add the credential object to the Binary Search Tree & then the Hash Table
          * 
          */
 
@@ -148,4 +147,9 @@ public class PasswordManager {
     public void checkAllCredentials() {
 
     }
+
+
+
+
+    
 }

@@ -16,8 +16,8 @@ import java.util.LinkedList;
  *  a hash table is an implementation of an associative array that uses a hash function for key generation
  */
 public class ChainingHashTable<K extends Comparable<K>,V> implements HashTableADT<K,V> {
-    private LinkedList<V>[] associativeArray;// LL decleration for individual cells collision resoulution strategy
-
+    private LinkedList<KeyValueEntry<K,V>>[] associativeArray;// LL decleration for individual cells collision resoulution strategy
+    private int size;
     // I think that this might have to be an array of LL's
     //private V[] associativeArray; // Decleration of the associative array referencing the individual cellsLL for chaining
     public ChainingHashTable() {
@@ -26,14 +26,15 @@ public class ChainingHashTable<K extends Comparable<K>,V> implements HashTableAD
 
     public ChainingHashTable(int numCells){
         // Cast the array to a generic type after compilation - typical array decleration will result in an error
-        associativeArray = (LinkedList<V>[]) new Object[numCells];
-        for (LinkedList<V> index : associativeArray) {
+        associativeArray = (LinkedList<KeyValueEntry<K,V>>[]) new Object[numCells];
+        size = 0;
+        for (LinkedList<KeyValueEntry<K,V>> index : associativeArray) {
             index = new LinkedList<>(); // declare each index with the start of a LL
         }
     }
 
     private int getIndex(K key) {
-        return key.hashCode() % size();
+        return key.hashCode() % size(); // hash function modulu size to generate 
     }
     /*
      * in the ADT documentation a insertion of the same key type just updats the value at that location.
@@ -49,53 +50,81 @@ public class ChainingHashTable<K extends Comparable<K>,V> implements HashTableAD
         // key.hashCode() returns a semi-unique integer based on the key
         int index = key.hashCode() % size();
         System.out.println(index);
-        // check if the value already exists within the hashtable
-        if (associativeArray[index] != null) {
-            if (associativeArray[index].getFirst() == key) {// check whether it is the same key
-                // update the value at the point
-                associativeArray[index].removeFirst();
-                associativeArray[index].addFirst(value); // replace the element with the updated value
-                return true;
+        // encapsulate in a try catch 
+        try {
+            // iterate through the linked list
+            for (KeyValueEntry<K,V> linkedListEntry : associativeArray[index]) { // note that efficeincy will not be impacted by an empty LL cell as 
+                // if an element matches the key update the value
+                if (linkedListEntry.compareTo(new KeyValueEntry<>(key, value)) == 0) { // compare the keys
+                    // update the value
+                    linkedListEntry.setValue(value);
+                    return true; // indicates a successful insertion
+                }
             }
-            else {// if it is not the same 
-
-            }
+            // if the key does not match anything within the table
+            associativeArray[index].add(new KeyValueEntry<K,V>(key, value)); // add it as a new element
+            size ++; // & increment the size
+            return true; // indicates a successful insertion
+        } catch (Exception e) {
+            return false; // the insertion failed due to some error therefor return false
         }
-        associativeArray[index].add(value); // insert the value at the index
-        throw new UnsupportedOperationException("Unimplemented method 'insert'");
+        
     }
 
     @Override
     public V remove(K key) {
         // Determine the index
         int index = key.hashCode() % size();
-        V valueAtIndex = associativeArray[index].getFirst(); // get the element at the index
-        associativeArray[index].removeFirst();
-        return valueAtIndex;
+        // initialise a temp variable to store the element that was deleted
+        V element;
+        // loop through the linkedlist cell at the determined index 
+        for (KeyValueEntry<K,V> linkedListEntry : associativeArray[index]) {
+            // check if the linkedListEntry matches
+            if (linkedListEntry.compareTo(new KeyValueEntry<>(key, null)) == 0) {
+                element = linkedListEntry.getValue();
+                linkedListEntry = null; // delete the entry
+                return element;
+            }
+        }
+        return null; // after iterating through either the empty or non empty LL cell the element was not found so therfor could not be deleted
     }
 
+    /* return an element based on a key within the HashTable */
     @Override
     public V get(K key) {
-        // find the index of the element based on the key
+        // determine the index based on the key
         int index = key.hashCode() % size();
-        return associativeArray[index].getFirst();
+        // loop through the array at the specified index
+        for (KeyValueEntry<K,V> linkedListEntry : associativeArray[index]) {// for each cell in the array
+            // compare entry.key to paramter.key
+            if (linkedListEntry.compareTo(new KeyValueEntry<>(key, null)) == 0) {
+                return linkedListEntry.getValue(); // if they match then the element is within the hashtable
+            }
+        }               
+        return null; // either the LL cell was empty or the element was not found in the LL
     }
 
+    /* check if an element exists based on a key within the HashTable */
     @Override
     public boolean contains(K key) {
+        // determine the index based on the key
         int index = key.hashCode() % size();
-        if (associativeArray[index].getFirst() != null) { // Check whether their exists a key at that index
-            return true;
-        }       
-        return false;
+        // loop through the array
+        for (KeyValueEntry<K,V> linkedListEntry : associativeArray[index]) {// for each cell in the array
+            // compare entry.key to paramter.key
+            if (linkedListEntry.compareTo(new KeyValueEntry<>(key, null)) == 0) {
+                return true; // if they match then the element is within the hashtable
+            }
+        }               
+        return false; // either the LL cell was empty or the element was not found in the LL
     }
 
     // check the entire array to see if it is empty
     @Override
     public boolean isEmpty() {
-        for (LinkedList<V> element : associativeArray) {
-            if (element.getFirst() != null) {// check if there is an element at the index
-                return false; // if there is then the hash table is not empty
+        for (LinkedList<KeyValueEntry<K,V>> element : associativeArray) {
+            if (!element.isEmpty()) {// if there is an element at the index
+                return false; // return null
             }
         }
         return true; // the entire array has been searched and no elements have been found therefor the hash table is empty
@@ -103,13 +132,13 @@ public class ChainingHashTable<K extends Comparable<K>,V> implements HashTableAD
 
     @Override
     public int size() {
-        return 0;
+        return size;
     }
 
     @Override
     public void clear() {
         // Loop through the hash table & clear every linked list cell
-        for (LinkedList<V> element : associativeArray) {
+        for (LinkedList<KeyValueEntry<K,V>> element : associativeArray) {
             element.clear(); // clear the linked list cell
         }
     }

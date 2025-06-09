@@ -81,6 +81,7 @@ public class LinkedBinarySearchTree<K extends Comparable<K>, V> implements Binar
         // base case - if no children; insert node there
         if (p.left == null && p.right == null) { 
             p.left = new BinaryNode(new KeyValueEntry<K,V>(key, value));
+            return;
         } // if - either child
         System.out.println("");
 
@@ -361,7 +362,7 @@ public class LinkedBinarySearchTree<K extends Comparable<K>, V> implements Binar
         return list; // return the completed list
     }
     /**
-     * 
+     * Ordering
      *    1
      *   / \
      *  2   3
@@ -372,7 +373,7 @@ public class LinkedBinarySearchTree<K extends Comparable<K>, V> implements Binar
         return null;
     }
     /**
-     * 
+     * Ordering
      *    3
      *   / \
      *  1   2
